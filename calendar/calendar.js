@@ -17,7 +17,8 @@ function addDayButtons() {
             button.textContent = day;
             button.classList.add('day-button');
             button.addEventListener('click', () => {
-                button.classList.toggle('activated')
+                button.classList.toggle('activated');
+                saveStorage();
             });
             month.appendChild(button);
         }
@@ -37,7 +38,46 @@ function setMonthLabels() {
     });
 }
 
+function loadStorage() {
+    // load from localStorage
+    const data = localStorage.getItem('calendarData');
+
+    if (data) {
+        const parsedData = JSON.parse(data);
+        const months = document.querySelectorAll('.month');
+
+        months.forEach((month, index) => {
+            const days = month.querySelectorAll('.day-button');
+            days.forEach((day, dayIndex) => {
+                if (parsedData[index][dayIndex]) {
+                    day.classList.add('activated');
+                }
+            });
+        });
+    }
+}
+
+function saveStorage() {
+    const months = document.querySelectorAll('.month');
+    const data = [];
+
+    months.forEach((month) => {
+        const days = month.querySelectorAll('.day-button');
+        const monthData = [];
+
+        days.forEach((day) => {
+            monthData.push(day.classList.contains('activated'));
+        });
+
+        data.push(monthData);
+    });
+
+    // save to localStorage
+    localStorage.setItem('calendarData', JSON.stringify(data));
+}
+
 window.onload = function() {
     addDayButtons();
     setMonthLabels();
+    loadStorage();
 }
