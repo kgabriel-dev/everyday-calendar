@@ -3,23 +3,32 @@ html {
 }
 
 #calendar {
-    margin: 20px;
+    margin: auto;
     display: flex;
     flex-direction: row;
     align-items: start;
+    flex-grow: 1;
+    width: 100%;
+}
+
+#calendar-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     justify-content: center;
-    column-gap: 10px;
+    height: 100%;
 }
 
 .month {
     display: flex;
     flex-direction: column;
     align-items: center;
+    flex-grow: 1;
 }
 
 .day-button {
-    width: 48px;
-    height: 48px;
+    width: 4.5vw;
+    aspect-ratio: 1;
     border-radius: 50%;
     background-color: rgb(50, 50, 50);
     border-color: gold;
@@ -30,6 +39,7 @@ html {
     justify-content: center;
     margin: 5px;
     cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
 }
 
 .day-button.activated {
