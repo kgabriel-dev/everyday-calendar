@@ -1,0 +1,42 @@
+html {
+    background-color: rgb(30, 30, 30);
+}
+
+#calendar {
+    margin: 20px;
+    display: flex;
+    flex-direction: row;
+    align-items: start;
+    justify-content: center;
+    column-gap: 10px;
+}
+
+.month {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.day-button {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background-color: rgb(50, 50, 50);
+    border-color: gold;
+    border-style: solid;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 5px;
+    cursor: pointer;
+}
+
+.day-button.activated {
+    background-color: gold;
+    color: black;
+}
+
+.month-label {
+    color: white;
+}
