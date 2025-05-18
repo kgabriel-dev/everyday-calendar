@@ -17,8 +17,24 @@
                     <span id="activity">(Current Activity)</span>
                     <button onclick="nextActivity()">Next Activity -></button>
                 </div>
-                <button id="settings-btn">Settings</button>
+                <button id="settings-btn" onclick="openSettings()">Settings</button>
             </div>
         </div>
+
+        <dialog id="settings-dialog">
+            <div class="settings-item">
+                <!-- section to edit the activities list -->
+                <h2>Edit Activities</h2>
+                <div id="activity-list">
+                </div>
+                
+                <div id="add-activity-wrapper">
+                    <input type="text" id="new-activity-name" placeholder="New Activity Name">
+                    <button id="add-activity-btn" onclick="addActivity()">Add Activity</button>
+                </div>
+            </div>
+
+            <button onclick="closeSettings()">Close Settings</button>
+        </dialog>
     </body>
 </html>

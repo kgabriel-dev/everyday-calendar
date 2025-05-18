@@ -103,3 +103,56 @@ body {
         bottom: 20px;
     }
 }
+
+dialog {
+    border: 2px solid gold;
+    border-radius: 10px;
+    background-color: rgb(50, 50, 50);
+    color: white;
+    width: 80vw;
+
+
+    #activity-list {
+        display: flex;
+        flex-direction: column;
+        max-height: 60vh;
+        overflow-y: auto;
+        font-size: 13pt;
+        border: 1px solid lightgray;
+
+        * {
+            font-size: 13pt;
+        }
+
+        div.activity-item {
+            padding: 7px;
+            display: flex;
+            justify-content: space-between;
+            border: 1px solid transparent;
+
+            &:hover {
+                background-color: rgb(70, 70, 70);
+                color: white;
+                border-color: white;
+            }
+
+            div.activity-actions {
+                display: flex;
+                gap: 10px;
+            }
+        }
+    }
+
+    #add-activity-wrapper {
+        margin-top: 10px;
+    }
+
+    .settings-item {
+        border: 1px solid gray;
+        padding: 20px;
+
+        h2 {
+            margin-top: 0;
+        }
+    }
+}

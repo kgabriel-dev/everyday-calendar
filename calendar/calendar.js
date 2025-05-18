@@ -52,7 +52,7 @@ function setMonthLabels() {
     });
 }
 
-function loadStorage() {
+function loadActivityData() {
     // load from localStorage
     const storageData = localStorage.getItem('calendarData');
     const currentActivity = document.querySelector('#activity').textContent;
@@ -130,7 +130,7 @@ function nextActivity() {
 
     activityDisplay.textContent = activities[nextIndex];
 
-    loadStorage();
+    loadActivityData();
 }
 
 function prevActivity() {
@@ -142,7 +142,157 @@ function prevActivity() {
 
     activityDisplay.textContent = activities[previousIndex];
 
-    loadStorage();
+    loadActivityData();
+}
+
+function openSettings() {
+    const dialog = document.querySelector('#settings-dialog');
+    dialog.showModal();
+}
+
+function closeSettings() {
+    const dialog = document.querySelector('#settings-dialog');
+    dialog.close();
+}
+
+function _createActivityItem(activity) {
+    const activityList = document.querySelector('#activity-list');
+
+    const rowContainer = document.createElement('div');
+    rowContainer.classList.add('activity-item');
+    activityList.appendChild(rowContainer);
+
+    const activityLabel = document.createElement('span');
+    activityLabel.textContent = activity;
+    rowContainer.appendChild(activityLabel);
+
+    const actionsContainer = document.createElement('div');
+    actionsContainer.classList.add('activity-actions');
+    rowContainer.appendChild(actionsContainer);
+
+    const deleteButton = document.createElement('button');
+    deleteButton.textContent = 'Delete';
+    deleteButton.onclick = () => {
+        activities = activities.filter((a) => a !== activity);
+
+        if(activities.length == 0) {
+            alert('You cannot delete all activities. Please add a new activity before deleting this one.');
+            return;
+        }
+
+        localStorage.setItem('activitiesData', JSON.stringify(activities));
+
+        const oldStorageData = JSON.parse(localStorage.getItem('calendarData'));
+        const newStorageData = {};
+        
+        Object.keys(oldStorageData).forEach((key) => {
+            if (key === activity)
+                return;
+
+            newStorageData[key] = oldStorageData[key];
+        });
+
+        localStorage.setItem('calendarData', JSON.stringify(newStorageData));
+
+        activityList.removeChild(rowContainer);
+
+        const activityDisplay = document.querySelector('#activity');
+        if (activityDisplay.textContent === activity) {
+            if (activities.length > 0) {
+                activityDisplay.textContent = activities[0];
+            } else {
+                activityDisplay.textContent = '';
+            }
+        }
+        loadActivityData();
+    }
+    actionsContainer.appendChild(deleteButton);
+
+    const editButton = document.createElement('button');
+    editButton.textContent = 'Edit';
+    editButton.onclick = () => {
+        const newActivity = prompt('Edit activity name:', activity);
+        if (newActivity) {
+            activities[activities.indexOf(activity)] = newActivity;
+            localStorage.setItem('activitiesData', JSON.stringify(activities));
+
+            const oldStorageData = JSON.parse(localStorage.getItem('calendarData'));
+            const newStorageData = {};
+            Object.keys(oldStorageData).forEach((key) => {
+                if (key === activity) {
+                    newStorageData[newActivity] = oldStorageData[key];
+                } else {
+                    newStorageData[key] = oldStorageData[key];
+                }
+            });
+            localStorage.setItem('calendarData', JSON.stringify(newStorageData));
+
+            activityLabel.textContent = newActivity;
+        }
+    }
+    actionsContainer.appendChild(editButton);
+
+    const resetButton = document.createElement('button');
+    resetButton.textContent = 'Reset';
+    resetButton.onclick = () => {
+        const confirmReset = confirm('Are you sure you want to reset this activity?');
+        if (confirmReset) {
+            const storageData = JSON.parse(localStorage.getItem('calendarData')) || {};
+            
+            for(let i = 0; i < storageData[activity].length; i++) {
+                for(let j = 0; j < storageData[activity][i].length; j++) {
+                    storageData[activity][i][j] = false;
+                }
+            }
+
+            localStorage.setItem('calendarData', JSON.stringify(storageData));
+            loadActivityData();
+        }
+    }
+    actionsContainer.appendChild(resetButton);
+}
+
+function initializeSettingsDialog() {
+    const dialog = document.querySelector('#settings-dialog');
+    
+    // add the activities to the list
+    activities.forEach((activity) => {
+        _createActivityItem(activity);
+    })
+}
+
+function addActivity() {
+    const activityNameTextbox = document.querySelector('#new-activity-name');
+    const activityName = activityNameTextbox.value;
+
+    if(!activityName || activityName.length == 0)
+        return;
+
+    _createActivityItem(activityName);
+    activities.push(activityName);
+
+    let localStorageData = localStorage.getItem('activitiesData');
+    if (localStorageData) {
+        const parsedData = JSON.parse(localStorageData);
+        parsedData.push(activityName);
+        localStorage.setItem('activitiesData', JSON.stringify(parsedData));
+    } else {
+        localStorage.setItem('activitiesData', JSON.stringify([activityName]));
+    }
+    activityNameTextbox.value = '';
+
+    localStorageData = localStorage.getItem('calendarData');
+    if (localStorageData) {
+        const parsedData = JSON.parse(localStorageData);
+        parsedData[activityName] = [];
+        localStorage.setItem('calendarData', JSON.stringify(parsedData));
+    } else {
+        const newData = {};
+        newData[activityName] = [];
+        localStorage.setItem('calendarData', JSON.stringify(newData));
+    }
+    saveStorage();
+    loadActivityData();
 }
 
 window.onload = function() {
@@ -159,5 +309,7 @@ window.onload = function() {
         saveStorage();
     }
 
-    loadStorage();
+    loadActivityData();
+
+    initializeSettingsDialog();
 }
