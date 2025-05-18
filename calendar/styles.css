@@ -1,5 +1,12 @@
 html {
     background-color: rgb(30, 30, 30);
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
 }
 
 #calendar {
@@ -11,12 +18,13 @@ html {
     width: 100%;
 }
 
-#calendar-wrapper {
+#wrapper {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: stretch;
     height: 100%;
+    row-gap: 10px;
 }
 
 .month {
@@ -27,7 +35,7 @@ html {
 }
 
 .day-button {
-    width: 4.5vw;
+    width: 4.2vw;
     aspect-ratio: 1;
     border-radius: 50%;
     background-color: rgb(50, 50, 50);
@@ -49,4 +57,32 @@ html {
 
 .month-label {
     color: white;
+}
+
+#activity-wrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+    column-gap: 30px;
+
+    button {
+        background-color: rgb(50, 50, 50);
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s, color 0.3s;
+
+        &:hover {
+            background-color: gold;
+            color: black;
+        }
+    }
+
+    #activity {
+        color: white;
+    }
 }

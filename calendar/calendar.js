@@ -1,5 +1,6 @@
+let activities = [];
+
 function addDayButtons() {
-    const calendar = document.querySelector('#calendar');
     const months = document.querySelectorAll('.month');
     const daysInMonths = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 
@@ -40,26 +41,40 @@ function setMonthLabels() {
 
 function loadStorage() {
     // load from localStorage
-    const data = localStorage.getItem('calendarData');
+    const storageData = localStorage.getItem('calendarData');
+    const currentActivity = document.querySelector('#activity').textContent;
 
-    if (data) {
-        const parsedData = JSON.parse(data);
+    if (storageData) {
+        const parsedData = JSON.parse(storageData);
+        let activityData;
+
+        if (parsedData[currentActivity])
+            activityData = parsedData[currentActivity];
+        else
+            activityData = [];
+
         const months = document.querySelectorAll('.month');
 
-        months.forEach((month, index) => {
+        months.forEach((month, monthIndex) => {
             const days = month.querySelectorAll('.day-button');
             days.forEach((day, dayIndex) => {
-                if (parsedData[index][dayIndex]) {
+                if (activityData[monthIndex] && activityData[monthIndex][dayIndex]) {
                     day.classList.add('activated');
+                } else {
+                    day.classList.remove('activated');
                 }
             });
         });
-    }
+    } 
 }
 
 function saveStorage() {
     const months = document.querySelectorAll('.month');
-    const data = [];
+
+    const currentActivity = document.querySelector('#activity').textContent;
+    const storageData = JSON.parse(localStorage.getItem('calendarData')) || {};
+
+    const currentData = [];
 
     months.forEach((month) => {
         const days = month.querySelectorAll('.day-button');
@@ -69,15 +84,60 @@ function saveStorage() {
             monthData.push(day.classList.contains('activated'));
         });
 
-        data.push(monthData);
+        currentData.push(monthData);
     });
 
+    storageData[currentActivity] = currentData;
+
     // save to localStorage
-    localStorage.setItem('calendarData', JSON.stringify(data));
+    localStorage.setItem('calendarData', JSON.stringify(storageData));
+}
+
+function loadActivities() {
+    const data = localStorage.getItem('activitiesData');
+
+    if (data) {
+        const parsedData = JSON.parse(data);
+
+        if (parsedData.length && parsedData.length > 0) {
+            activities = parsedData;
+
+            const activityDisplay = document.querySelector('#activity');
+            activityDisplay.textContent = activities[0];
+        }
+    }
+}
+
+function nextActivity() {
+    const activityDisplay = document.querySelector('#activity');
+    const currentActivity = activityDisplay.textContent;
+
+    const currentIndex = activities.indexOf(currentActivity);
+    const nextIndex = (currentIndex + 1) % activities.length;
+
+    activityDisplay.textContent = activities[nextIndex];
+
+    loadStorage();
+}
+
+function prevActivity() {
+    const activityDisplay = document.querySelector('#activity');
+    const currentActivity = activityDisplay.textContent;
+
+    const currentIndex = activities.indexOf(currentActivity);
+    const previousIndex = (currentIndex - 1 + activities.length) % activities.length;
+
+    activityDisplay.textContent = activities[previousIndex];
+
+    loadStorage();
 }
 
 window.onload = function() {
     addDayButtons();
     setMonthLabels();
+
+    localStorage.setItem('activitiesData', JSON.stringify(['Activity 1', 'Activity 2', 'Activity 3']));
+
+    loadActivities();
     loadStorage();
 }
