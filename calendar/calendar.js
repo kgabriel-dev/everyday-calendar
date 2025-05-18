@@ -1,7 +1,20 @@
 let activities = [];
 
 function addDayButtons() {
-    const months = document.querySelectorAll('.month');
+    const months = [];
+    for(let i = 0; i < 12; i++) {
+        const month = document.createElement('div');
+        month.classList.add('month');
+        document.querySelector('#calendar').appendChild(month);
+
+        const monthLabel = document.createElement('p');
+        monthLabel.classList.add('month-label');
+        monthLabel.textContent = '';
+        month.appendChild(monthLabel);
+
+        months.push(month);
+    }
+
     const daysInMonths = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 
     // Check for leap year
@@ -135,9 +148,16 @@ function prevActivity() {
 window.onload = function() {
     addDayButtons();
     setMonthLabels();
-
-    localStorage.setItem('activitiesData', JSON.stringify(['Activity 1', 'Activity 2', 'Activity 3']));
-
     loadActivities();
+
+    if(activities.length == 0) {
+        activities.push('Activity 1');
+
+        localStorage.setItem('activitiesData', JSON.stringify(activities));
+        
+        loadActivities();
+        saveStorage();
+    }
+
     loadStorage();
 }
