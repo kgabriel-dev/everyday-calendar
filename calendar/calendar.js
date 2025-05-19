@@ -1,6 +1,6 @@
 let activities = [];
 
-function addDayButtons() {
+async function addDayButtons() {
     const months = [];
     for(let i = 0; i < 12; i++) {
         const month = document.createElement('div');
@@ -23,18 +23,24 @@ function addDayButtons() {
         daysInMonths[1] = 29; // February has 29 days in a leap year
     }
 
+    const svgIcon = await fetch('icon.svg');
+    const svgText = await svgIcon.text();
+
     months.forEach((month, index) => {
         const numberOfDays = daysInMonths[index];
 
         for(let day = 1; day <= numberOfDays; day++) {
             const button = document.createElement('button');
-            button.textContent = day;
+            button.innerHTML = svgText + '<p>' + day + '</p>';
             button.classList.add('day-button');
+
             button.addEventListener('click', () => {
                 button.classList.toggle('activated');
                 
                 updateCurrentActivity();
             });
+            
+
             month.appendChild(button);
         }
     });

@@ -35,24 +35,51 @@ body {
 }
 
 .day-button {
-    width: 4.2vw;
+    width: 5vw;
     aspect-ratio: 1;
     border-radius: 50%;
-    background-color: rgb(50, 50, 50);
-    border-color: gold;
-    border-style: solid;
+    background-color: transparent;
+    border-color: transparent;
+    /* border-style: solid; */
     color: white;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 5px;
     cursor: pointer;
     transition: background-color 0.3s, color 0.3s;
-}
+    padding: 0;
 
-.day-button.activated {
-    background-color: gold;
-    color: black;
+    p {
+        position: absolute;
+        font-weight: bold;
+        font-size: 12pt;
+        color: white;
+        transition: color 0.3s;
+    }
+
+    svg {
+        height: 100%;
+        background: transparent;
+
+        #outerBorder {
+            fill: gold !important;
+        }
+
+        #innerFill {
+            fill: rgb(50, 50, 50) !important;
+            transition: fill 0.3s;
+        }
+    }
+
+    &.activated {
+        #innerFill {
+            fill: gold !important;
+        }
+
+        p {
+            color: black;
+        }
+    }
 }
 
 .month-label {
