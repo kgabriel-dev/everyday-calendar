@@ -107,13 +107,13 @@ function saveStorage() {
 }
 
 function loadActivities() {
-    const data = localStorage.getItem('activitiesData');
+    const data = localStorage.getItem('calendarData');
 
     if (data) {
         const parsedData = JSON.parse(data);
 
-        if (parsedData.length && parsedData.length > 0) {
-            activities = parsedData;
+        if (Object.keys(parsedData).length > 0) {
+            activities = Object.keys(parsedData);
 
             const activityDisplay = document.querySelector('#activity');
             activityDisplay.textContent = activities[0];
@@ -180,8 +180,6 @@ function _createActivityItem(activity) {
             return;
         }
 
-        localStorage.setItem('activitiesData', JSON.stringify(activities));
-
         const oldStorageData = JSON.parse(localStorage.getItem('calendarData'));
         const newStorageData = {};
         
@@ -214,7 +212,6 @@ function _createActivityItem(activity) {
         const newActivity = prompt('Edit activity name:', activity);
         if (newActivity) {
             activities[activities.indexOf(activity)] = newActivity;
-            localStorage.setItem('activitiesData', JSON.stringify(activities));
 
             const oldStorageData = JSON.parse(localStorage.getItem('calendarData'));
             const newStorageData = {};
@@ -271,17 +268,9 @@ function addActivity() {
     _createActivityItem(activityName);
     activities.push(activityName);
 
-    let localStorageData = localStorage.getItem('activitiesData');
-    if (localStorageData) {
-        const parsedData = JSON.parse(localStorageData);
-        parsedData.push(activityName);
-        localStorage.setItem('activitiesData', JSON.stringify(parsedData));
-    } else {
-        localStorage.setItem('activitiesData', JSON.stringify([activityName]));
-    }
     activityNameTextbox.value = '';
 
-    localStorageData = localStorage.getItem('calendarData');
+    const localStorageData = localStorage.getItem('calendarData');
     if (localStorageData) {
         const parsedData = JSON.parse(localStorageData);
         parsedData[activityName] = [];
@@ -302,8 +291,7 @@ window.onload = function() {
 
     if(activities.length == 0) {
         activities.push('Activity 1');
-
-        localStorage.setItem('activitiesData', JSON.stringify(activities));
+        localStorage.setItem('calendarData', JSON.stringify({ 'Activity 1': [] }));
         
         loadActivities();
         saveStorage();
