@@ -207,7 +207,7 @@ function _createActivityItem(activity) {
     actionsContainer.appendChild(deleteButton);
 
     const editButton = document.createElement('button');
-    editButton.textContent = 'Edit';
+    editButton.textContent = 'Rename';
     editButton.onclick = () => {
         const newActivity = prompt('Edit activity name:', activity);
         if (newActivity) {
@@ -225,6 +225,11 @@ function _createActivityItem(activity) {
             localStorage.setItem('calendarData', JSON.stringify(newStorageData));
 
             activityLabel.textContent = newActivity;
+            
+            const activityDisplay = document.querySelector('#activity');
+            if (activityDisplay.textContent === activity) {
+                activityDisplay.textContent = newActivity;
+            }
         }
     }
     actionsContainer.appendChild(editButton);
