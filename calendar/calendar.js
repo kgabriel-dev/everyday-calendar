@@ -32,7 +32,8 @@ function addDayButtons() {
             button.classList.add('day-button');
             button.addEventListener('click', () => {
                 button.classList.toggle('activated');
-                saveStorage();
+                
+                updateCurrentActivity();
             });
             month.appendChild(button);
         }
@@ -52,17 +53,15 @@ function setMonthLabels() {
     });
 }
 
-function loadActivityData() {
-    // load from localStorage
-    const storageData = localStorage.getItem('calendarData');
+async function loadActivityData() {
+    const storageData = await getActivityData();
     const currentActivity = document.querySelector('#activity').textContent;
 
     if (storageData) {
-        const parsedData = JSON.parse(storageData);
         let activityData;
 
-        if (parsedData[currentActivity])
-            activityData = parsedData[currentActivity];
+        if (storageData[currentActivity])
+            activityData = storageData[currentActivity];
         else
             activityData = [];
 
@@ -81,11 +80,14 @@ function loadActivityData() {
     } 
 }
 
-function saveStorage() {
+async function updateCurrentActivity() {
     const months = document.querySelectorAll('.month');
 
     const currentActivity = document.querySelector('#activity').textContent;
-    const storageData = JSON.parse(localStorage.getItem('calendarData')) || {};
+    const storageData = await getActivityData() || {};
+
+    if (!storageData[currentActivity])
+        storageData[currentActivity] = [];
 
     const currentData = [];
 
@@ -101,23 +103,17 @@ function saveStorage() {
     });
 
     storageData[currentActivity] = currentData;
-
-    // save to localStorage
-    localStorage.setItem('calendarData', JSON.stringify(storageData));
+    saveActivityData(storageData);
 }
 
-function loadActivities() {
-    const data = localStorage.getItem('calendarData');
+async function loadActivities() {
+    const data = await getActivityData();
 
-    if (data) {
-        const parsedData = JSON.parse(data);
+    if (data && Object.keys(data).length > 0) {
+        activities = Object.keys(data);
 
-        if (Object.keys(parsedData).length > 0) {
-            activities = Object.keys(parsedData);
-
-            const activityDisplay = document.querySelector('#activity');
-            activityDisplay.textContent = activities[0];
-        }
+        const activityDisplay = document.querySelector('#activity');
+        activityDisplay.textContent = activities[0];
     }
 }
 
@@ -172,15 +168,17 @@ function _createActivityItem(activity) {
 
     const deleteButton = document.createElement('button');
     deleteButton.textContent = 'Delete';
-    deleteButton.onclick = () => {
-        activities = activities.filter((a) => a !== activity);
+    deleteButton.onclick = async () => {
+        let filteredActivities = activities.filter((a) => a !== activity);
 
-        if(activities.length == 0) {
+        if(filteredActivities.length == 0) {
             alert('You cannot delete all activities. Please add a new activity before deleting this one.');
             return;
         }
 
-        const oldStorageData = JSON.parse(localStorage.getItem('calendarData'));
+        activities = filteredActivities;
+
+        const oldStorageData = await getActivityData();
         const newStorageData = {};
         
         Object.keys(oldStorageData).forEach((key) => {
@@ -190,7 +188,9 @@ function _createActivityItem(activity) {
             newStorageData[key] = oldStorageData[key];
         });
 
-        localStorage.setItem('calendarData', JSON.stringify(newStorageData));
+        saveActivityData(newStorageData)
+            .then(() => loadActivityData())
+            .catch((error) => console.error('Error saving activity data:', error));
 
         activityList.removeChild(rowContainer);
 
@@ -202,18 +202,17 @@ function _createActivityItem(activity) {
                 activityDisplay.textContent = '';
             }
         }
-        loadActivityData();
     }
     actionsContainer.appendChild(deleteButton);
 
     const editButton = document.createElement('button');
     editButton.textContent = 'Rename';
-    editButton.onclick = () => {
+    editButton.onclick = async () => {
         const newActivity = prompt('Edit activity name:', activity);
         if (newActivity) {
             activities[activities.indexOf(activity)] = newActivity;
 
-            const oldStorageData = JSON.parse(localStorage.getItem('calendarData'));
+            const oldStorageData = await getActivityData();
             const newStorageData = {};
             Object.keys(oldStorageData).forEach((key) => {
                 if (key === activity) {
@@ -222,7 +221,8 @@ function _createActivityItem(activity) {
                     newStorageData[key] = oldStorageData[key];
                 }
             });
-            localStorage.setItem('calendarData', JSON.stringify(newStorageData));
+            
+            saveActivityData(newStorageData);
 
             activityLabel.textContent = newActivity;
             
@@ -236,10 +236,10 @@ function _createActivityItem(activity) {
 
     const resetButton = document.createElement('button');
     resetButton.textContent = 'Reset';
-    resetButton.onclick = () => {
+    resetButton.onclick = async () => {
         const confirmReset = confirm('Are you sure you want to reset this activity?');
         if (confirmReset) {
-            const storageData = JSON.parse(localStorage.getItem('calendarData')) || {};
+            const storageData = await getActivityData() || {};
             
             for(let i = 0; i < storageData[activity].length; i++) {
                 for(let j = 0; j < storageData[activity][i].length; j++) {
@@ -247,23 +247,22 @@ function _createActivityItem(activity) {
                 }
             }
 
-            localStorage.setItem('calendarData', JSON.stringify(storageData));
-            loadActivityData();
+            saveActivityData(storageData)
+                .then(() => loadActivityData())
+                .catch((error) => console.error('Error saving activity data:', error));
         }
     }
     actionsContainer.appendChild(resetButton);
 }
 
 function initializeSettingsDialog() {
-    const dialog = document.querySelector('#settings-dialog');
-    
     // add the activities to the list
     activities.forEach((activity) => {
         _createActivityItem(activity);
     })
 }
 
-function addActivity() {
+async function addActivity() {
     const activityNameTextbox = document.querySelector('#new-activity-name');
     const activityName = activityNameTextbox.value;
 
@@ -275,34 +274,51 @@ function addActivity() {
 
     activityNameTextbox.value = '';
 
-    const localStorageData = localStorage.getItem('calendarData');
+    const localStorageData = await getActivityData();
     if (localStorageData) {
-        const parsedData = JSON.parse(localStorageData);
-        parsedData[activityName] = [];
-        localStorage.setItem('calendarData', JSON.stringify(parsedData));
+        localStorageData[activityName] = [];
+        
+        await saveActivityData(localStorageData);
     } else {
         const newData = {};
         newData[activityName] = [];
-        localStorage.setItem('calendarData', JSON.stringify(newData));
+        
+        await saveActivityData(newData);
     }
-    saveStorage();
-    loadActivityData();
 }
 
-window.onload = function() {
+async function getActivityData() {
+    const response = await fetch('http://localhost:5000/data');
+    const data = await response.json();
+
+    return data;
+}
+
+async function saveActivityData(data) {
+    await fetch('http://localhost:5000/data', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    });
+}
+
+window.onload = async function() {
     addDayButtons();
     setMonthLabels();
-    loadActivities();
+    await loadActivities();
+
+    console.log('Loaded activities:', activities);
 
     if(activities.length == 0) {
         activities.push('Activity 1');
-        localStorage.setItem('calendarData', JSON.stringify({ 'Activity 1': [] }));
+        
+        await saveActivityData({ 'Activity 1': [] });
         
         loadActivities();
-        saveStorage();
     }
 
     loadActivityData();
-
     initializeSettingsDialog();
 }

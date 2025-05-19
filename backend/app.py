@@ -1,9 +1,11 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 import json
 import os
 
 
 app = Flask(__name__)
+CORS(app, origins='http://localhost:5500')
 DATA_FILE = 'data.json'
 
 def read_data():
