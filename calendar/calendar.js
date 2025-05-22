@@ -23,14 +23,25 @@ async function addDayButtons() {
         daysInMonths[1] = 29; // February has 29 days in a leap year
     }
 
-    const svgIcon = await fetch('icon.svg');
-    const svgText = await svgIcon.text();
+    const iconNormalSvg = await fetch('icon.svg', { cache: 'no-store' });
+    const iconNormalText = await iconNormalSvg.text();
+    const iconTopSvg = await fetch('icon-top.svg', { cache: 'no-store' });
+    const iconTopText = await iconTopSvg.text();
+    const iconBottomSvg = await fetch('icon-bottom.svg', { cache: 'no-store' });
+    const iconBottomText = await iconBottomSvg.text();
 
     months.forEach((month, index) => {
         const numberOfDays = daysInMonths[index];
 
         for(let day = 1; day <= numberOfDays; day++) {
             const button = document.createElement('button');
+
+            let svgText = iconNormalText;
+            if (day === 1)
+                svgText = iconTopText;
+            else if (day === numberOfDays)
+                svgText = iconBottomText;
+
             button.innerHTML = svgText + '<p>' + day + '</p>';
             button.classList.add('day-button');
 

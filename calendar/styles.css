@@ -37,10 +37,10 @@ body {
 .day-button {
     width: 5vw;
     aspect-ratio: 1;
+    border: none;
     border-radius: 50%;
     background-color: transparent;
     border-color: transparent;
-    /* border-style: solid; */
     color: white;
     display: flex;
     align-items: center;
@@ -60,6 +60,10 @@ body {
     svg {
         height: 100%;
         background: transparent;
+
+        * {
+            fill: gold !important;
+        }
 
         #outerBorder {
             fill: gold !important;
