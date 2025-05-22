@@ -322,20 +322,18 @@ async function saveActivityData(data) {
 }
 
 window.onload = async function() {
-    addDayButtons();
+    await addDayButtons();
     setMonthLabels();
     await loadActivities();
-
-    console.log('Loaded activities:', activities);
 
     if(activities.length == 0) {
         activities.push('Activity 1');
         
         await saveActivityData({ 'Activity 1': [] });
         
-        loadActivities();
+        await loadActivities();
     }
 
-    loadActivityData();
+    await loadActivityData();
     initializeSettingsDialog();
 }
