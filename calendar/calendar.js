@@ -336,4 +336,9 @@ window.onload = async function() {
 
     await loadActivityData();
     initializeSettingsDialog();
+
+    // refresh the activity data every 5 seconds
+    setInterval(() => {
+        loadActivityData();
+    }, 5000);
 }
