@@ -8,7 +8,7 @@ app = Flask(__name__)
 # Allow all origins for CORS
 CORS(app, resources={r"/*": {"origins": "*"}})
 
-DATA_FILE = 'data.json'
+DATA_FILE = os.path.dirname(os.path.abspath(__file__)) + '/data.json'
 
 def read_data():
     if not os.path.exists(DATA_FILE):
