@@ -5,7 +5,9 @@ import os
 
 
 app = Flask(__name__)
-CORS(app, origins='*')  # Allow all origins for CORS
+# Allow all origins for CORS
+CORS(app, resources={r"/*": {"origins": "*"}})
+
 DATA_FILE = 'data.json'
 
 def read_data():
