@@ -5,7 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Everyday Calendar</title>
         <link rel="stylesheet" href="styles.css">
-        <script src="calendar.js"></script>
+        <script src="calendar.js" type="module"></script>
     </head>
     <body>
         <div id="wrapper">
@@ -28,9 +28,10 @@
                 <div id="activity-list">
                 </div>
                 
+                <!-- section to add a new activity to the list -->
                 <div id="add-activity-wrapper">
                     <input type="text" id="new-activity-name" placeholder="New Activity Name">
-                    <button id="add-activity-btn" onclick="addActivity()">Add Activity</button>
+                    <button id="add-activity-btn" onclick="addNewActivity()">Add Activity</button>
                 </div>
             </div>
 
