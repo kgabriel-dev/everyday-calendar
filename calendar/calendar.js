@@ -305,14 +305,14 @@ async function addActivity() {
 }
 
 async function getActivityData() {
-    const response = await fetch('http://everyday-calendar.local:5000/data');
+    const response = await fetch(window.location.protocol + '//' + window.location.hostname + ':5000/data');
     const data = await response.json();
 
     return data;
 }
 
 async function saveActivityData(data) {
-    await fetch('http://everyday-calendar.local:5000/data', {
+    await fetch(window.location.protocol + '//' + window.location.hostname + ':5000/data', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -337,7 +337,7 @@ window.onload = async function() {
     await loadActivityData();
 
     if(document.querySelector('#settings-dialog'))
-    initializeSettingsDialog();
+        initializeSettingsDialog();
 
     // refresh the activity data every 5 seconds
     setInterval(() => {
