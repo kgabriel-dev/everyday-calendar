@@ -111,6 +111,11 @@ async function createCalendar(): Promise<void> {
             // add the day number to the button
             dayButton.innerHTML += `<p>${day}</p>`;
 
+            // add tooltip with day of week to the button
+            const date = new Date(new Date().getFullYear(), month, day);
+            const dayOfWeek = date.toLocaleString('default', { weekday: 'long' });
+            dayButton.title = dayOfWeek;
+
             monthDiv.appendChild(dayButton);
         }
     }
