@@ -1,4 +1,4 @@
-import { fetchDisplayData, renderCalendar, createCalendar } from './utils.js';
+import { renderCalendar, createCalendar } from './utils.js';
 
 function updateCalendarData(): void {
     // this function will send the data to the server

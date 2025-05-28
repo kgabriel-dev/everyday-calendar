@@ -1,4 +1,4 @@
-import { fetchDisplayData, renderCalendar, createCalendar } from './utils.js';
+import { renderCalendar, createCalendar } from './utils.js';
 
 window.onload = () => {
     // Initialize the calendar on page load
