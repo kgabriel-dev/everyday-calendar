@@ -1,0 +1,15 @@
+[Unit]
+Description=Start the everyday calendar frontend and backend, and chromium
+After=multi-user.target 
+
+[Service] 
+ExecStartPre=sudo /bin/chmod 660 /dev/tty2
+User=gabriel
+Group=gabriel 
+Type=simple
+ExecStart=/home/gabriel/start-everyday-calendar.sh
+Restart=on-failure
+Conflicts=getty@tty1.service  
+
+[Install]
+WantedBy=multi-user.target
