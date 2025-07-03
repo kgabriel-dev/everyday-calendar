@@ -9,6 +9,8 @@ sudo apt install -y python3 xserver-xorg xinit xterm x11-xserver-utils x11-utils
 
 # add current user to the 'tty' group to allow access to the TTY (dev/tty2 is required for X server later)
 sudo usermod -aG tty $USER
+# reload the group memberships in order to apply the changes immediately
+newgrp tty
 
 # create the virtual environment for the backend and install dependencies
 python3 -m venv everyday-calendar/backend/.venv
