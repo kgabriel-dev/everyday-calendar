@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # copy .xinitrc to the home directory
-mv .xinitrc ~/.xinitrc
+cp ~/everyday-calendar/scripst/.xinitrc ~/.xinitrc
 
 # install dependencies via apt
 sudo apt update
