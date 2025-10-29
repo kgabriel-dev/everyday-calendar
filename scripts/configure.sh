@@ -18,6 +18,7 @@ deactivate
 sed -i 's/USER/'"$USER"'/g' everyday-calendar/scripts/everyday-calendar.service
 mkdir -p ~/.config/systemd/user
 cp everyday-calendar/scripts/everyday-calendar.service ~/.config/systemd/user/everyday-calendar.service
+systemctl --user enable everyday-calendar.service
 
 # NOTE: the following commands need to be run at last because "newgrp tty" opens a new shell
 # add current user to the 'tty' group to allow access to the TTY (dev/tty2 is required for X server later)
