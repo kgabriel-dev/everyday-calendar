@@ -6,7 +6,7 @@ chmod +x .xinitrc
 
 # install dependencies via apt
 sudo apt update
-sudo apt install -y python3 xserver-xorg xinit xterm x11-xserver-utils x11-utils chromium
+sudo apt install -y python3 xserver-xorg xinit xterm x11-xserver-utils x11-utils chromium unclutter
 
 # create the virtual environment for the backend and install dependencies
 python3 -m venv everyday-calendar/backend/.venv
