@@ -16,6 +16,10 @@ display_name = ""
 
 
 def read_data():
+    """
+    Read all activities and their data from the JSON file.
+    """
+
     if not os.path.exists(DATA_FILE):
         return {}
     
@@ -24,12 +28,20 @@ def read_data():
 
 
 def write_data(data):
+    """
+    Write all activities and their data to the JSON file.
+    """
+
     with open(DATA_FILE, 'w') as file:
         json.dump(data, file, indent=2)
 
 
 @app.route('/complete', methods=['GET'])
 def get_data():
+    """
+    Return all activities and their data.
+    """
+
     data = read_data()
     
     returned_data = [{
@@ -42,6 +54,10 @@ def get_data():
 
 @app.route('/display', methods=['GET'])
 def display_data():
+    """
+    Return the data for the activity currently set to be displayed.
+    """
+
     data = read_data()
     if not data:
         return jsonify({"message": "No data available"}), 404
@@ -62,6 +78,10 @@ def display_data():
 
 @app.route('/delete', methods=['POST'])
 def delete_activity():
+    """
+    Delete an activity by its title.
+    """
+
     activity = request.json.get('title')
 
     if not activity:
@@ -84,6 +104,10 @@ def delete_activity():
 
 @app.route('/rename', methods=['POST'])
 def edit_activity_title():
+    """
+    Rename an activity by providing old and new titles.
+    """
+
     old_title = request.json.get('oldTitle')
     new_title = request.json.get('newTitle')
 
@@ -110,6 +134,10 @@ def edit_activity_title():
 
 @app.route('/reset', methods=['POST'])
 def reset_activity():
+    """
+    Reset the activity data to an empty list.
+    """
+    
     activity = request.json.get('title')
 
     if not activity:
@@ -127,6 +155,10 @@ def reset_activity():
 
 @app.route('/update', methods=['POST'])
 def update_activity():
+    """
+    Update the data for a specific activity by providing its title and a new data list.
+    """
+
     activity = request.json.get('title')
     new_data = request.json.get('data')
 
@@ -145,6 +177,10 @@ def update_activity():
 
 @app.route('/change-display', methods=['POST'])
 def change_display_name():
+    """
+    Change the activity to be displayed.
+    """
+
     global display_name
     new_display_name = request.json.get('title')
 
@@ -157,6 +193,10 @@ def change_display_name():
 
 @app.route('/add', methods=['POST'])
 def add_activity():
+    """
+    Add a new activity with the given title.
+    """
+
     activity = request.json.get('title')
 
     if not activity:
