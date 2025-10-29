@@ -30,6 +30,19 @@ The goal is to **make habit tracking more personal, visual, and self-hosted** â€
 
 Original concept by **Simone Giertz**; Digital implementation by **me (kgabriel-dev)**
 
+## Usage
+After you have completed the installation steps below, the Everyday Calendar will start automatically on boot. The Raspberry Pi runs a simple web server that serves a control panel.
+
+To interact with the calendar, you need it's IP address.
+
+The control panel can be accessed by navigating to `http://<RASPBERRY_PI_IP_ADDRESS>:5500/calendar.html` in your web browser.
+
+The website is the interface of the calendar, so you can use it to mark your habits as done for the day. You do this by clicking on the respective day in the calendar view.
+
+In the bottom right corner of the calendar, there is a settings button. Clicking it opens the settings panel, where you can:
+* Add or remove habits
+* Select the habit to display on the calendar
+* Reset your progress on specific habits
 
 ## Installation
 
