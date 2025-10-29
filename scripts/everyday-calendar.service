@@ -1,0 +1,10 @@
+[Unit]
+Description=Everyday Calendar frontend/backend autostart
+After=network.target
+
+[Service]
+ExecStart=/home/USER/everyday-calendar/scripts/start-by-user.sh
+Restart=on-failure
+
+[Install]
+WantedBy=default.target
