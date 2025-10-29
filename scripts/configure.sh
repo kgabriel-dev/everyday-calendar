@@ -5,7 +5,7 @@ cp ~/everyday-calendar/scripts/.xinitrc ~/.xinitrc
 
 # install dependencies via apt
 sudo apt update
-sudo apt install -y python3 xserver-xorg xinit xterm x11-xserver-utils x11-utils chromium-browser
+sudo apt install -y python3 xserver-xorg xinit xterm x11-xserver-utils x11-utils chromium
 
 # add current user to the 'tty' group to allow access to the TTY (dev/tty2 is required for X server later)
 sudo usermod -aG tty $USER

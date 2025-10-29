@@ -17,7 +17,7 @@ BACK_PID=$!
 unclutter > /dev/null 2>&1 &
 
 # start Chromium
-exec chromium-browser --no-memcheck --disable-features=Translate --disable-gpu --start-fullscreen --kiosk --noerrdialogs --disable-infobars --window-size=1080,1920 http://localhost:5500/display.html > /dev/null 2>&1
+exec chromium --no-memcheck --disable-features=Translate --disable-gpu --start-fullscreen --kiosk --noerrdialogs --disable-infobars --window-size=1080,1920 http://localhost:5500/display.html > /dev/null 2>&1
 
 # if we reach this point, it means Chromium has exited
 
