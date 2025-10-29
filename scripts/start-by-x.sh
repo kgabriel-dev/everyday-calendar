@@ -16,6 +16,15 @@ BACK_PID=$!
 # hide the mouse cursor using unclutter
 unclutter > /dev/null 2>&1 &
 
+# wait a bit to ensure that the servers are up and running
+for i in {1..20}; do
+    if curl -s http://localhost:5500/display.html > /dev/null; then
+        echo "Server ready!"
+        break
+    fi
+    sleep 1
+done
+
 # start Chromium
 exec chromium --no-memcheck --disable-features=Translate --disable-gpu --start-fullscreen --kiosk --noerrdialogs --disable-infobars --window-size=1080,1920 http://localhost:5500/display.html > /dev/null 2>&1
 
