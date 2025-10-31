@@ -10,9 +10,9 @@ async function fetchDisplayData(): Promise<DisplayData> {
         throw new Error('Invalid data format');
     }
 
-    // Validate that data.data is a 2D array of booleans
-    if (!data.data.every(row => Array.isArray(row) && row.every(item => typeof item === 'boolean'))) {
-        throw new Error('Invalid data format: data.data must be a 2D array of booleans');
+    // Validate that data.data is a 2D array of numbers
+    if (!data.data.every(row => Array.isArray(row) && row.every(item => typeof item === 'number'))) {
+        throw new Error('Invalid data format: data.data must be a 2D array of numbers');
     }
 
     return {
@@ -50,7 +50,7 @@ function renderCalendar(): void {
 
                 days.forEach((day, dayIndex) => {
                     if (displayData.data[monthIndex] && displayData.data[monthIndex][dayIndex])
-                        day.classList.add('activated');
+                        day.classList.add('activated-' + displayData.data[monthIndex][dayIndex]);
                     else
                         day.classList.remove('activated');
                 });

@@ -1,6 +1,6 @@
 type DisplayData = {
     title: string;
-    data: boolean[][];
+    data: number[][];
 }
 
 type CompleteDisplayData = DisplayData[];

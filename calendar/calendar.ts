@@ -5,21 +5,30 @@ import { renderCalendar, createCalendar } from './utils.js';
  * Then it sends this data to the server to update the database.
  */
 function updateCalendarData(): void {
-    const data: boolean[][] = [];
+    const data: number[][] = [];
 
     // Get all month elements (columns)
     const months = document.querySelectorAll('.month');
 
     // Iterate through each month and collect the state of each day button
     months.forEach(month => {
-        const monthData: boolean[] = [];
+        const monthData: number[] = [];
 
         // Get all day buttons within the month
         const days = month.querySelectorAll('.day-button');
 
-        // Determine if each day is activated and store the result
+        // Determine the state of each day and store the result
         days.forEach(day => {
-            monthData.push(day.classList.contains('activated'));
+            // Check for activated states from 1 to 5
+            for(let i = 1; i < 6; i++) {
+                if (day.classList.contains('activated-' + i)) {
+                    monthData.push(i);
+                    return;
+                }
+            }
+
+            // No activated state found, so mark as not activated (0)
+            monthData.push(0); // Not activated
         });
 
         data.push(monthData);
@@ -53,7 +62,7 @@ function updateCalendarData(): void {
 
 /**
  * Configures the onclick handlers for all day buttons in the calendar.
- * When a button is clicked, it toggles its "activated" state and updates the server.
+ * When a button is clicked, it changes its "activated" state (0 -> 1 -> 2 ... -> 5 -> 0) and updates the server.
  */
 function configureCalendarDayButtons(): void {
     const months = document.querySelectorAll('.month');
@@ -64,7 +73,29 @@ function configureCalendarDayButtons(): void {
             const dayButton = day as HTMLButtonElement;
 
             dayButton.onclick = () => {
-                day.classList.toggle('activated');
+                // Cycle through activated states from 0 to 5
+                let currentState = 0;
+                for(let i = 1; i < 6; i++) {
+                    if (dayButton.classList.contains('activated-' + i)) {
+                        currentState = i;
+                        break;
+                    }
+                }
+
+                // Remove current activated class
+                if (currentState > 0) {
+                    dayButton.classList.remove('activated-' + currentState);
+                }
+
+                // Determine next state
+                const nextState = (currentState + 1) % 6; // Cycle from 0 to 5
+
+                // Add the next activated class if it's not 0
+                if (nextState > 0) {
+                    dayButton.classList.add('activated-' + nextState);
+                }
+
+                // Update the server with the new calendar data                
                 updateCalendarData();
             };
         });
@@ -89,8 +120,8 @@ async function fetchCompleteActivityData(): Promise<CompleteDisplayData> {
 
     // Validate each item in the array
     data.forEach(item => {
-        if (!item.title || !Array.isArray(item.data) || !item.data.every(row => Array.isArray(row) && row.every(item => typeof item === 'boolean'))) {
-            throw new Error('Invalid data format: each item must have a title and a 2D array of booleans');
+        if (!item.title || !Array.isArray(item.data) || !item.data.every(row => Array.isArray(row) && row.every(item => typeof item === 'number'))) {
+            throw new Error('Invalid data format: each item must have a title and a 2D array of numbers');
         }
     });
 

@@ -75,9 +75,49 @@ body {
         }
     }
 
-    &.activated {
+    &.activated-1 {
         #innerFill {
-            fill: gold !important;
+            fill: #FFD700 !important;
+        }
+
+        p {
+            color: black;
+        }
+    }
+
+    &.activated-2 {
+        #innerFill {
+            fill: #2667FF !important;
+        }
+
+        p {
+            color: black;
+        }
+    }
+
+    &.activated-3 {
+        #innerFill {
+            fill: #B9E6FF !important;
+        }
+
+        p {
+            color: black;
+        }
+    }
+
+    &.activated-4 {
+        #innerFill {
+            fill: #E36397 !important;
+        }
+
+        p {
+            color: black;
+        }
+    }
+
+    &.activated-5 {
+        #innerFill {
+            fill: #40F99B !important;
         }
 
         p {
