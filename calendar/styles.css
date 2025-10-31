@@ -76,7 +76,7 @@ body {
     }
 
     &.activated-1 {
-        #innerFill {
+        #innerFill, #outerBorder {
             fill: #FFD700 !important;
         }
 
@@ -86,7 +86,7 @@ body {
     }
 
     &.activated-2 {
-        #innerFill {
+        #innerFill, #outerBorder {
             fill: #2667FF !important;
         }
 
@@ -96,7 +96,7 @@ body {
     }
 
     &.activated-3 {
-        #innerFill {
+        #innerFill, #outerBorder {
             fill: #B9E6FF !important;
         }
 
@@ -106,7 +106,7 @@ body {
     }
 
     &.activated-4 {
-        #innerFill {
+        #innerFill, #outerBorder {
             fill: #E36397 !important;
         }
 
@@ -116,7 +116,7 @@ body {
     }
 
     &.activated-5 {
-        #innerFill {
+        #innerFill, #outerBorder {
             fill: #40F99B !important;
         }
 
