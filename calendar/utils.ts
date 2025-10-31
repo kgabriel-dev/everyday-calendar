@@ -51,8 +51,14 @@ function renderCalendar(): void {
                 days.forEach((day, dayIndex) => {
                     if (displayData.data[monthIndex] && displayData.data[monthIndex][dayIndex])
                         day.classList.add('activated-' + displayData.data[monthIndex][dayIndex]);
-                    else
-                        day.classList.remove('activated');
+                    else {
+                        // remove all activated classes
+                        day.classList.forEach(className => {
+                            if (className.startsWith('activated-')) {
+                                day.classList.remove(className);
+                            }
+                        });
+                    }
                 });
             });
         })
