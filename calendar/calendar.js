@@ -8,28 +8,38 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import { renderCalendar, createCalendar } from './utils.js';
+/**
+ * Collects the state of all buttons and the current activity name.
+ * Then it sends this data to the server to update the database.
+ */
 function updateCalendarData() {
-    // this function will send the data to the server
-    const months = document.querySelectorAll('.month');
     const data = [];
+    // Get all month elements (columns)
+    const months = document.querySelectorAll('.month');
+    // Iterate through each month and collect the state of each day button
     months.forEach(month => {
-        const days = month.querySelectorAll('.day-button');
         const monthData = [];
+        // Get all day buttons within the month
+        const days = month.querySelectorAll('.day-button');
+        // Determine if each day is activated and store the result
         days.forEach(day => {
             monthData.push(day.classList.contains('activated'));
         });
         data.push(monthData);
     });
+    // Get the current activity title
     const activityTitleElement = document.getElementById('activity');
     if (!activityTitleElement) {
         console.error('Activity title element not found');
         return;
     }
     const activityTitle = activityTitleElement.textContent;
+    // Prepare the payload to send to the server
     const payload = {
         title: activityTitle,
         data: data
     };
+    // Send the updated data to the server
     fetch(window.location.protocol + '//' + window.location.hostname + ':5000/update', {
         method: 'POST',
         headers: {
@@ -40,7 +50,11 @@ function updateCalendarData() {
         .then(() => console.log('Calendar data updated successfully'))
         .catch(error => console.error('Error updating calendar data:', error));
 }
-function updateCalendarDayButtons() {
+/**
+ * Configures the onclick handlers for all day buttons in the calendar.
+ * When a button is clicked, it toggles its "activated" state and updates the server.
+ */
+function configureCalendarDayButtons() {
     const months = document.querySelectorAll('.month');
     months.forEach(month => {
         const days = month.querySelectorAll('.day-button');
@@ -54,6 +68,10 @@ function updateCalendarDayButtons() {
         });
     });
 }
+/**
+ * Fetches the complete list of activities with their data from the server.
+ * @returns Promise resolving to the complete list of activities with their data
+ */
 function fetchCompleteActivityData() {
     return __awaiter(this, void 0, void 0, function* () {
         const response = yield fetch(window.location.protocol + '//' + window.location.hostname + ':5000/complete');
@@ -74,6 +92,10 @@ function fetchCompleteActivityData() {
         return data;
     });
 }
+/**
+ * Initializes the settings dialog by fetching the complete activity data
+ * and populating the activity list in the dialog.
+ */
 function initSettingsDialog() {
     const dialogElement = document.getElementById('settings-dialog');
     if (!dialogElement) {
@@ -96,16 +118,26 @@ function initSettingsDialog() {
         console.error('Error fetching complete activity data:', error);
     });
 }
+/**
+ * Creates an activity list item in the settings dialog with action buttons.
+ *
+ * @param activity The data for the activity (title and data)
+ * @param activityList The HTML element representing the activity list
+ */
 function createActivityListItem(activity, activityList) {
+    // Create the row container
     const rowContainer = document.createElement('div');
     rowContainer.classList.add('activity-item');
     activityList.appendChild(rowContainer);
+    // Add the activity title label
     const activityLabel = document.createElement('span');
     activityLabel.textContent = activity.title;
     rowContainer.appendChild(activityLabel);
+    // Create the container for action buttons
     const actionsContainer = document.createElement('div');
     actionsContainer.classList.add('activity-actions');
     rowContainer.appendChild(actionsContainer);
+    // Create and append action buttons: Delete, Edit, Reset, Select
     const deleteButton = document.createElement('button');
     deleteButton.textContent = 'Delete';
     deleteButton.onclick = () => __awaiter(this, void 0, void 0, function* () {
@@ -221,6 +253,9 @@ function createActivityListItem(activity, activityList) {
     };
     actionsContainer.appendChild(selectButton);
 }
+/**
+ * Opens the settings dialog.
+ */
 function openSettings() {
     const dialog = document.getElementById('settings-dialog');
     if (!dialog) {
@@ -230,6 +265,9 @@ function openSettings() {
     dialog.showModal();
 }
 window.openSettings = openSettings;
+/**
+ * Closes the settings dialog.
+ */
 function closeSettings() {
     const dialog = document.getElementById('settings-dialog');
     if (!dialog) {
@@ -239,6 +277,9 @@ function closeSettings() {
     dialog.close();
 }
 window.closeSettings = closeSettings;
+/**
+ * Adds a new activity based on user input and updates the activity list.
+ */
 function addNewActivity() {
     const activityNameElement = document.getElementById('new-activity-name');
     if (!activityNameElement) {
@@ -278,7 +319,7 @@ window.onload = () => {
     // Initialize the calendar on page load
     createCalendar()
         .then(() => {
-        updateCalendarDayButtons();
+        configureCalendarDayButtons();
         renderCalendar();
     })
         .catch(error => {
