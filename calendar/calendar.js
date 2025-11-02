@@ -163,7 +163,39 @@ function createActivityListItem(activity, activityList) {
     const actionsContainer = document.createElement('div');
     actionsContainer.classList.add('activity-actions');
     rowContainer.appendChild(actionsContainer);
-    // Create and append action buttons: Delete, Edit, Reset, Select
+    // Create and append action buttons: Number of State Selection, Delete, Edit, Reset, Select
+    const stateSelectDropdown = document.createElement('select');
+    for (let i = 2; i <= 5; i++) {
+        const option = document.createElement('option');
+        option.value = i.toString();
+        option.textContent = i.toString() + ' States';
+        stateSelectDropdown.appendChild(option);
+    }
+    stateSelectDropdown.value = '2'; // Default to 2
+    stateSelectDropdown.onchange = () => {
+        const selectedValue = parseInt(stateSelectDropdown.value, 10);
+        // Ask for confirmation if reducing the number of states
+        const confirmChange = confirm(`Are you sure you want to set the number of states for activity "${activity.title}" to ${selectedValue}? Everything above this state will be reset.`);
+        if (!confirmChange) {
+            // TODO: Reset dropdown to previous value
+            return;
+        }
+        // Send the selected number of states to the server
+        fetch(window.location.protocol + '//' + window.location.hostname + ':5000/set-states', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ title: activity.title, states: selectedValue })
+        })
+            .then(() => {
+            console.log(`Number of state selection for activity "${activity.title}" set to ${selectedValue}`);
+        })
+            .catch(error => {
+            console.error('Error setting number of state selection:', error);
+        });
+    };
+    actionsContainer.appendChild(stateSelectDropdown);
     const deleteButton = document.createElement('button');
     deleteButton.textContent = 'Delete';
     deleteButton.onclick = () => __awaiter(this, void 0, void 0, function* () {
