@@ -94,7 +94,7 @@ function configureCalendarDayButtons() {
                         dayButton.classList.remove('activated-' + currentState);
                     }
                     // Determine next state
-                    const nextState = (currentState + 1) % 6; // Cycle from 0 to 5
+                    const nextState = (currentState + 1) % activityStates; // Cycle from 0 to 5
                     // Add the next activated class if it's not 0
                     if (nextState > 0) {
                         dayButton.classList.add('activated-' + nextState);
