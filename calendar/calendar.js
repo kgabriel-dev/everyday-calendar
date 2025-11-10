@@ -190,6 +190,7 @@ function createActivityListItem(activity, activityList) {
         })
             .then(() => {
             console.log(`Number of state selection for activity "${activity.title}" set to ${selectedValue}`);
+            renderCalendar(); // Refresh calendar to reflect changes
         })
             .catch(error => {
             console.error('Error setting number of state selection:', error);

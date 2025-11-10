@@ -46,7 +46,8 @@ def get_data():
     
     returned_data = [{
         "title": activity,
-        "data": data[activity]
+        "number_of_states": data[activity]["number_of_states"],
+        "calendar": data[activity]["calendar"]
     } for activity in data]
     
     return jsonify(returned_data), 200
@@ -70,7 +71,8 @@ def display_data():
     
     return_data = {
         "title": display_name,
-        "data": display_data
+        "calendar": display_data["calendar"],
+        "number_of_states": display_data["number_of_states"]
     }
 
     return jsonify(return_data), 200
@@ -146,7 +148,7 @@ def reset_activity():
     data = read_data()
 
     if activity in data:
-        data[activity] = []
+        data[activity]["calendar"] = []
         write_data(data)
         return jsonify({"message": f"Activity '{activity}' reset successfully"}), 200
     else:
@@ -156,7 +158,7 @@ def reset_activity():
 @app.route('/update', methods=['POST'])
 def update_activity():
     """
-    Update the data for a specific activity by providing its title and a new data list.
+    Update the calendar data for a specific activity by providing its title and a new data list.
     """
 
     activity = request.json.get('title')
@@ -168,7 +170,7 @@ def update_activity():
     data = read_data()
 
     if activity in data:
-        data[activity] = new_data
+        data[activity]["calendar"] = new_data
         write_data(data)
         return jsonify({"message": f"Activity '{activity}' updated successfully"}), 200
     else:
@@ -194,10 +196,11 @@ def change_display_name():
 @app.route('/add', methods=['POST'])
 def add_activity():
     """
-    Add a new activity with the given title.
+    Add a new activity with the given title and number of states.
     """
 
     activity = request.json.get('title')
+    states = request.json.get('number_of_states', 2)
 
     if not activity:
         return jsonify({"error": "Activity title must be provided"}), 400
@@ -207,10 +210,41 @@ def add_activity():
     if activity in data:
         return jsonify({"error": f"Activity '{activity}' already exists"}), 400
 
-    data[activity] = []
+    data[activity] = {
+        "number_of_states": states,
+        "calendar": []
+    }
     write_data(data)
 
     return jsonify({"message": f"Activity '{activity}' added successfully"}), 201
+
+
+@app.route('/set-states', methods=['POST'])
+def set_activity_states():
+    """
+    Set the number of states for a specific activity.
+    """
+
+    activity = request.json.get('title')
+    num_states = request.json.get('numStates')
+
+    if not activity or num_states is None:
+        return jsonify({"error": "Activity title and number of states must be provided"}), 400
+
+    data = read_data()
+
+    # Adjust existing data to fit the new number of states
+    if activity in data:
+        data[activity]["number_of_states"] = num_states
+
+        for month in data[activity]["calendar"]:
+            for day in month:
+                day = 0 if day >= num_states else day # Adjust day value if it exceeds new number of states
+
+        write_data(data)
+        return jsonify({"message": f"Activity '{activity}' number of states updated to {num_states}"}), 200
+    else:
+        return jsonify({"error": f"Activity '{activity}' not found"}), 404
 
 
 if __name__ == '__main__':
