@@ -3,7 +3,7 @@
     "module": "ESNext",
     "target": "ES6",
     "sourceMap": true,
-    "lib": ["ES2015", "DOM"]
+    "lib": ["ES2018", "DOM"]
   },
   "exclude": [
     "node_modules"

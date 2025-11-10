@@ -7,7 +7,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { renderCalendar, createCalendar } from './utils.js';
+import { renderCalendar, createCalendar, fetchDisplayData } from './utils.js';
 /**
  * Collects the state of all buttons and the current activity name.
  * Then it sends this data to the server to update the database.
@@ -70,26 +70,38 @@ function configureCalendarDayButtons() {
             // cast day to HTMLButtonElement
             const dayButton = day;
             dayButton.onclick = () => {
-                // Cycle through activated states from 0 to 5
-                let currentState = 0;
-                for (let i = 1; i < 6; i++) {
-                    if (dayButton.classList.contains('activated-' + i)) {
-                        currentState = i;
-                        break;
+                // Check how many states are allowed for the current activity
+                let activityStates = 2; // default to 2 states
+                fetchDisplayData()
+                    .then(displayData => {
+                    activityStates = displayData.number_of_states;
+                })
+                    .catch(error => {
+                    console.error('Error fetching display data for state count:', error, "Using default of 2 states.");
+                })
+                    .finally(() => {
+                    // Now proceed to change the button state based on activityStates
+                    // Determine current state
+                    let currentState = 0;
+                    for (let i = 1; i < 6; i++) {
+                        if (dayButton.classList.contains('activated-' + i)) {
+                            currentState = i;
+                            break;
+                        }
                     }
-                }
-                // Remove current activated class
-                if (currentState > 0) {
-                    dayButton.classList.remove('activated-' + currentState);
-                }
-                // Determine next state
-                const nextState = (currentState + 1) % 6; // Cycle from 0 to 5
-                // Add the next activated class if it's not 0
-                if (nextState > 0) {
-                    dayButton.classList.add('activated-' + nextState);
-                }
-                // Update the server with the new calendar data                
-                updateCalendarData();
+                    // Remove current activated class
+                    if (currentState > 0) {
+                        dayButton.classList.remove('activated-' + currentState);
+                    }
+                    // Determine next state
+                    const nextState = (currentState + 1) % 6; // Cycle from 0 to 5
+                    // Add the next activated class if it's not 0
+                    if (nextState > 0) {
+                        dayButton.classList.add('activated-' + nextState);
+                    }
+                    // Update the server with the new calendar data                
+                    updateCalendarData();
+                });
             };
         });
     });
