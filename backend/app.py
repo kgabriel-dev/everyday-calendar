@@ -226,10 +226,15 @@ def set_activity_states():
     """
 
     activity = request.json.get('title')
-    num_states = request.json.get('numStates')
+    num_states = request.json.get('states')
 
     if not activity or num_states is None:
         return jsonify({"error": "Activity title and number of states must be provided"}), 400
+
+    try:
+        num_states = int(num_states)
+    except (TypeError, ValueError):
+        return jsonify({"error": "Number of states must be an integer"}), 400
 
     data = read_data()
 
@@ -238,8 +243,9 @@ def set_activity_states():
         data[activity]["number_of_states"] = num_states
 
         for month in data[activity]["calendar"]:
-            for day in month:
-                day = 0 if day >= num_states else day # Adjust day value if it exceeds new number of states
+            for i, day in enumerate(month):
+                # Adjust day value if it exceeds or equals new number of states
+                month[i] = 0 if day >= num_states else day
 
         write_data(data)
         return jsonify({"message": f"Activity '{activity}' number of states updated to {num_states}"}), 200
