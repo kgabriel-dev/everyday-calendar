@@ -161,7 +161,7 @@ function initSettingsDialog(): void {
 /**
  * Creates an activity list item in the settings dialog with action buttons.
  * 
- * @param activity The data for the activity (title and data)
+ * @param activity The data for the activity (title, calendar data and number of states)
  * @param activityList The HTML element representing the activity list
  */
 function createActivityListItem(activity: DisplayData, activityList: HTMLElement): void {
@@ -188,7 +188,7 @@ function createActivityListItem(activity: DisplayData, activityList: HTMLElement
         option.textContent = i.toString() + ' States'; 
         stateSelectDropdown.appendChild(option);
     }
-    stateSelectDropdown.value = '2'; // Default to 2
+    stateSelectDropdown.value = activity.number_of_states.toString();
     stateSelectDropdown.onchange = () => {
         const selectedValue = parseInt(stateSelectDropdown.value, 10);
 
@@ -196,7 +196,7 @@ function createActivityListItem(activity: DisplayData, activityList: HTMLElement
         const confirmChange = confirm(`Are you sure you want to set the number of states for activity "${activity.title}" to ${selectedValue}? Everything above this state will be reset.`);
 
         if (!confirmChange) {
-            // TODO: Reset dropdown to previous value
+            stateSelectDropdown.value = activity.number_of_states.toString(); // Revert selection
             return;
         }
 
@@ -211,6 +211,7 @@ function createActivityListItem(activity: DisplayData, activityList: HTMLElement
             .then(() => {
                 console.log(`Number of state selection for activity "${activity.title}" set to ${selectedValue}`);
                 renderCalendar(); // Refresh calendar to reflect changes
+                activity.number_of_states = selectedValue; // Update local activity data
             })
             .catch(error => {
                 console.error('Error setting number of state selection:', error);

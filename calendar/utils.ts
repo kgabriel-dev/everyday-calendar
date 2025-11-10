@@ -18,7 +18,7 @@ async function fetchDisplayData(): Promise<DisplayData> {
     return {
         title: data.title,
         calendar: data.calendar,
-        numberOfStates: data.number_of_states
+        number_of_states: data.number_of_states
     };
 }
 
