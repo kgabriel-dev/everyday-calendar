@@ -20,7 +20,7 @@ function updateCalendarData(): void {
         // Determine the state of each day and store the result
         days.forEach(day => {
             // Check for activated states from 1 to 5
-            for(let i = 1; i < 6; i++) {
+            for(let i = 1; i <= 5; i++) {
                 if (day.classList.contains('activated-' + i)) {
                     monthData.push(i);
                     return;
@@ -182,7 +182,7 @@ function createActivityListItem(activity: DisplayData, activityList: HTMLElement
 
     // Create and append action buttons: Number of State Selection, Delete, Edit, Reset, Select
     const stateSelectDropdown = document.createElement('select');
-    for (let i = 2; i <= 5; i++) {
+    for (let i = 2; i <= 6; i++) {
         const option = document.createElement('option');
         option.value = i.toString();
         option.textContent = i.toString() + ' States'; 
@@ -424,7 +424,7 @@ function addNewActivity(): void {
     }
 
     // Create a new activity item in the list
-    createActivityListItem({ title: newActivityName, calendar: [], numberOfStates: 2 }, activityList);
+    createActivityListItem({ title: newActivityName, calendar: [], number_of_states: 2 }, activityList);
 }
 (window as any).addNewActivity = addNewActivity;
 
