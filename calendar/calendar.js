@@ -111,7 +111,7 @@ function fetchCompleteActivityData() {
         }
         // Validate each item in the array
         data.forEach(item => {
-            if (!item.title || !Array.isArray(item.data) || !item.data.every(row => Array.isArray(row) && row.every(item => typeof item === 'number'))) {
+            if (!item.title || !Array.isArray(item.calendar) || !item.calendar.every(row => Array.isArray(row) && row.every(item => typeof item === 'number'))) {
                 throw new Error('Invalid data format: each item must have a title and a 2D array of numbers');
             }
         });

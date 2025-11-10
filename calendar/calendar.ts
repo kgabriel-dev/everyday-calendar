@@ -111,7 +111,7 @@ async function fetchCompleteActivityData(): Promise<CompleteDisplayData> {
     if (!response.ok) {
         throw new Error('Network response was not ok');
     }
-    const data = await response.json();
+    const data = await response.json() as CompleteDisplayData;
     console.log('Fetched complete activity data:', data);
 
     if (!Array.isArray(data)) {
@@ -120,7 +120,7 @@ async function fetchCompleteActivityData(): Promise<CompleteDisplayData> {
 
     // Validate each item in the array
     data.forEach(item => {
-        if (!item.title || !Array.isArray(item.data) || !item.data.every(row => Array.isArray(row) && row.every(item => typeof item === 'number'))) {
+        if (!item.title || !Array.isArray(item.calendar) || !item.calendar.every(row => Array.isArray(row) && row.every(item => typeof item === 'number'))) {
             throw new Error('Invalid data format: each item must have a title and a 2D array of numbers');
         }
     });
