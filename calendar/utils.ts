@@ -6,18 +6,19 @@ async function fetchDisplayData(): Promise<DisplayData> {
     const data = await response.json();
     console.log('Fetched display data:', data);
 
-    if (!data || !data.title || !Array.isArray(data.data)) {
+    if (!data || !data.title || !Array.isArray(data.calendar) || !data.number_of_states) {
         throw new Error('Invalid data format');
     }
 
     // Validate that data.data is a 2D array of numbers
-    if (!data.data.every(row => Array.isArray(row) && row.every(item => typeof item === 'number'))) {
+    if (!data.calendar.every(row => Array.isArray(row) && row.every(item => typeof item === 'number'))) {
         throw new Error('Invalid data format: data.data must be a 2D array of numbers');
     }
 
     return {
         title: data.title,
-        data: data.data
+        calendar: data.calendar,
+        numberOfStates: data.number_of_states
     };
 }
 
@@ -49,8 +50,8 @@ function renderCalendar(): void {
                 const days = month.querySelectorAll('.day-button');
 
                 days.forEach((day, dayIndex) => {
-                    if (displayData.data[monthIndex] && displayData.data[monthIndex][dayIndex])
-                        day.classList.add('activated-' + displayData.data[monthIndex][dayIndex]);
+                    if (displayData.calendar[monthIndex] && displayData.calendar[monthIndex][dayIndex])
+                        day.classList.add('activated-' + displayData.calendar[monthIndex][dayIndex]);
                     else {
                         // remove all activated classes
                         day.classList.forEach(className => {

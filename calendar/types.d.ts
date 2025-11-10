@@ -1,6 +1,7 @@
 type DisplayData = {
     title: string;
-    data: number[][];
+    calendar: number[][];
+    numberOfStates: number;
 }
 
 type CompleteDisplayData = DisplayData[];

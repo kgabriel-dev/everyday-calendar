@@ -423,7 +423,7 @@ function addNewActivity(): void {
     }
 
     // Create a new activity item in the list
-    createActivityListItem({ title: newActivityName, data: [] }, activityList);
+    createActivityListItem({ title: newActivityName, calendar: [], numberOfStates: 2 }, activityList);
 }
 (window as any).addNewActivity = addNewActivity;
 

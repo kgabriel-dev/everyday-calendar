@@ -236,10 +236,10 @@ dialog {
         border-radius: 5px;
     }
 
-    button {
+    button, select {
         background-color: rgb(50, 50, 50);
         color: white;
-        border: none;
+        border: 1px solid gold;
         padding: 10px 20px;
         border-radius: 5px;
         cursor: pointer;
