@@ -57,13 +57,14 @@ This guide describes how to set up the **Everyday Calendar** project on a **Rasp
    ```
    Raspberry Pi OS (other) > Raspberry Pi OS Lite (64-bit)
    ```
-4. Flash the image to a microSD card and boot your Raspberry Pi.
+4. In the following steps, configure the Raspberry Pi to access your Wifi and enable the access via SSH. You can also set a custom username and password if you want.
+5. Flash the image to a microSD card and boot your Raspberry Pi.
 
 ---
 
 ### 2. Prepare the system
 
-After the first boot, update the system and install Git:
+After the first boot, you need to update the system and install Git. Therefore, connect to your Raspberry Pi via SSH and run the following commands:
 
 ```bash
 sudo apt update && sudo apt upgrade -y
@@ -76,7 +77,6 @@ sudo apt install git -y
 
 ```bash
 git clone https://github.com/kgabriel-dev/everyday-calendar.git
-cd everyday-calendar
 ```
 
 ---
@@ -84,7 +84,7 @@ cd everyday-calendar
 ### 4. Run the configuration script
 
 ```bash
-./scripts/configure.sh
+./everyday-calendar/scripts/configure.sh
 ```
 
 This script sets up all required dependencies and configurations.
@@ -135,4 +135,4 @@ sudo raspi-config
 sudo reboot
 ```
 
-After rebooting, the Everyday Calendar should start automatically.
+After rebooting, the Everyday Calendar should start automatically. You can access the control panel by navigating to `http://<RASPBERRY_PI_IP_ADDRESS>:5500/calendar.html` in your web browser.

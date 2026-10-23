@@ -10,4 +10,4 @@ sudo chmod 660 /dev/tty2
 
 xinit -- :0 vt2
 
-# from here the ~/.xinitrc script is executed, which executes started-by-x.sh
+# from here the ~/.xinitrc script is executed, which executes start-by-x.sh
