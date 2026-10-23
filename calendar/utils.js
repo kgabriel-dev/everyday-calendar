@@ -7,6 +7,16 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+let calendarChangeVersion = 0;
+let pendingCalendarUpdates = 0;
+function markCalendarChanged() {
+    calendarChangeVersion++;
+    pendingCalendarUpdates++;
+}
+function markCalendarUpdateComplete() {
+    calendarChangeVersion++;
+    pendingCalendarUpdates = Math.max(0, pendingCalendarUpdates - 1);
+}
 function fetchDisplayData() {
     return __awaiter(this, void 0, void 0, function* () {
         const response = yield fetch(window.location.protocol + '//' + window.location.hostname + ':5000/display');
@@ -19,7 +29,7 @@ function fetchDisplayData() {
             throw new Error('Invalid data format');
         }
         // Validate that data.data is a 2D array of numbers
-        if (!data.calendar.every(row => Array.isArray(row) && row.every(item => typeof item === 'number'))) {
+        if (!data.calendar.every((row) => Array.isArray(row) && row.every((item) => typeof item === 'number'))) {
             throw new Error('Invalid data format: data.data must be a 2D array of numbers');
         }
         return {
@@ -40,8 +50,12 @@ function renderCalendar() {
     if (months.length != 12)
         createCalendar();
     months = document.querySelectorAll('.month');
+    const renderVersion = calendarChangeVersion;
     fetchDisplayData()
         .then(displayData => {
+        if (pendingCalendarUpdates > 0 || renderVersion !== calendarChangeVersion) {
+            return;
+        }
         const activityTitle = document.getElementById('activity');
         if (activityTitle)
             activityTitle.textContent = displayData.title;
@@ -117,5 +131,5 @@ function createCalendar() {
         }
     });
 }
-export { fetchDisplayData, renderCalendar, createCalendar };
+export { fetchDisplayData, renderCalendar, createCalendar, markCalendarChanged, markCalendarUpdateComplete };
 //# sourceMappingURL=utils.js.map

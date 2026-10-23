@@ -1,3 +1,16 @@
+let calendarChangeVersion = 0;
+let pendingCalendarUpdates = 0;
+
+function markCalendarChanged(): void {
+    calendarChangeVersion++;
+    pendingCalendarUpdates++;
+}
+
+function markCalendarUpdateComplete(): void {
+    calendarChangeVersion++;
+    pendingCalendarUpdates = Math.max(0, pendingCalendarUpdates - 1);
+}
+
 async function fetchDisplayData(): Promise<DisplayData> {
     const response = await fetch(window.location.protocol + '//' + window.location.hostname + ':5000/display');
     if (!response.ok) {
@@ -11,7 +24,7 @@ async function fetchDisplayData(): Promise<DisplayData> {
     }
 
     // Validate that data.data is a 2D array of numbers
-    if (!data.calendar.every(row => Array.isArray(row) && row.every(item => typeof item === 'number'))) {
+    if (!data.calendar.every((row: unknown[]) => Array.isArray(row) && row.every((item: unknown) => typeof item === 'number'))) {
         throw new Error('Invalid data format: data.data must be a 2D array of numbers');
     }
 
@@ -37,8 +50,14 @@ function renderCalendar(): void {
         createCalendar();
     months = document.querySelectorAll('.month');
 
+    const renderVersion = calendarChangeVersion;
+
     fetchDisplayData()
         .then(displayData => {
+            if (pendingCalendarUpdates > 0 || renderVersion !== calendarChangeVersion) {
+                return;
+            }
+
             const activityTitle = document.getElementById('activity');
             if (activityTitle)
                 activityTitle.textContent = displayData.title;
@@ -128,4 +147,4 @@ async function createCalendar(): Promise<void> {
     }
 }
 
-export { fetchDisplayData, renderCalendar, createCalendar };
+export { fetchDisplayData, renderCalendar, createCalendar, markCalendarChanged, markCalendarUpdateComplete };

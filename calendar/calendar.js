@@ -7,7 +7,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { renderCalendar, createCalendar, fetchDisplayData } from './utils.js';
+import { renderCalendar, createCalendar, fetchDisplayData, markCalendarChanged, markCalendarUpdateComplete } from './utils.js';
 /**
  * Collects the state of all buttons and the current activity name.
  * Then it sends this data to the server to update the database.
@@ -55,7 +55,10 @@ function updateCalendarData() {
         },
         body: JSON.stringify(payload)
     })
-        .then(() => console.log('Calendar data updated successfully'))
+        .then(() => {
+        markCalendarUpdateComplete();
+        console.log('Calendar data updated successfully');
+    })
         .catch(error => console.error('Error updating calendar data:', error));
 }
 /**
@@ -70,6 +73,7 @@ function configureCalendarDayButtons() {
             // cast day to HTMLButtonElement
             const dayButton = day;
             dayButton.onclick = () => {
+                markCalendarChanged();
                 // Check how many states are allowed for the current activity
                 let activityStates = 2; // default to 2 states
                 fetchDisplayData()

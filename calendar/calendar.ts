@@ -1,4 +1,4 @@
-import { renderCalendar, createCalendar, fetchDisplayData } from './utils.js';
+import { renderCalendar, createCalendar, fetchDisplayData, markCalendarChanged, markCalendarUpdateComplete } from './utils.js';
 
 /**
  * Collects the state of all buttons and the current activity name.
@@ -56,7 +56,10 @@ function updateCalendarData(): void {
         },
         body: JSON.stringify(payload)
     })
-        .then(() => console.log('Calendar data updated successfully'))
+        .then(() => {
+            markCalendarUpdateComplete();
+            console.log('Calendar data updated successfully');
+        })
         .catch(error => console.error('Error updating calendar data:', error));
 }
 
@@ -73,6 +76,7 @@ function configureCalendarDayButtons(): void {
             const dayButton = day as HTMLButtonElement;
 
             dayButton.onclick = () => {
+                markCalendarChanged();
 
                 // Check how many states are allowed for the current activity
                 let activityStates = 2; // default to 2 states
